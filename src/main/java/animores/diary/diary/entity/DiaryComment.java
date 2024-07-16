@@ -2,11 +2,24 @@ package animores.diary.diary.entity;
 
 import animores.diary.common.BaseEntity;
 import animores.diary.profile.entity.Profile;
-import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
@@ -27,8 +40,8 @@ public class DiaryComment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Profile profile;
 
-    // diary reply 연관관계 추가
-
+    @OneToMany(mappedBy = "diaryComment", cascade = CascadeType.ALL)
+    private List<DiaryReply> replies;
 
     private String content;
 

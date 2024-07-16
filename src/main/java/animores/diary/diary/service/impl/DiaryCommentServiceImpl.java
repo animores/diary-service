@@ -1,22 +1,28 @@
 package animores.diary.diary.service.impl;
 
 import animores.diary.account.entity.Account;
+import animores.diary.common.exception.CustomException;
+import animores.diary.common.exception.ExceptionCode;
 import animores.diary.common.service.AuthorizationService;
+import animores.diary.diary.dao.GetAllDiaryReplyDao;
 import animores.diary.diary.dto.AddDiaryCommentRequest;
 import animores.diary.diary.dto.EditDiaryCommentRequest;
+import animores.diary.diary.dto.GetAllDiaryReplyResponse;
 import animores.diary.diary.dto.RemoveDiaryCommentRequest;
 import animores.diary.diary.entity.Diary;
 import animores.diary.diary.entity.DiaryComment;
+import animores.diary.diary.repository.DiaryCommentCustomRepository;
 import animores.diary.diary.repository.DiaryCommentRepository;
+import animores.diary.diary.repository.DiaryReplyRepository;
 import animores.diary.diary.repository.DiaryRepository;
 import animores.diary.diary.service.DiaryCommentService;
 import animores.diary.profile.entity.Profile;
 import animores.diary.profile.repository.ProfileRepository;
+import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +33,8 @@ public class DiaryCommentServiceImpl implements DiaryCommentService {
     private final ProfileRepository profileRepository;
     private final DiaryRepository diaryRepository;
     private final DiaryCommentRepository diaryCommentRepository;
+    private final DiaryReplyRepository diaryReplyRepository;
+    private final DiaryCommentCustomRepository diaryCommentCustomRepository;
 
     @Override
     @Transactional
@@ -64,6 +72,21 @@ public class DiaryCommentServiceImpl implements DiaryCommentService {
         diaryComment.delete();
     }
 
+    @Override
+    public GetAllDiaryReplyResponse getAllDiaryReply(Account account, Long commentId,
+        Long profileId, int page,
+        int size) {
+        Profile profile = findProfileById(profileId);
+        validateProfileAccess(account, profile);
+
+        Integer totalCount = diaryReplyRepository.countByDiaryCommentIdAndDeletedDtIsNull(
+            commentId);
+        List<GetAllDiaryReplyDao> replies = diaryCommentCustomRepository.getAllDiaryReply(
+            profileId, page, size);
+
+        return new GetAllDiaryReplyResponse(totalCount, replies);
+    }
+
     private Profile findProfileById(Long id) {
         return profileRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Profile not found with id: " + id));
@@ -78,5 +101,11 @@ public class DiaryCommentServiceImpl implements DiaryCommentService {
         return diaryCommentRepository.findById(id)
             .orElseThrow(
                 () -> new NoSuchElementException("Diary Comment not found with id: " + id));
+    }
+
+    public void validateProfileAccess(Account account, Profile profile) {
+        if (!account.getId().equals(profile.getAccount().getId())) {
+            throw new CustomException(ExceptionCode.UNAUTHORIZED_PROFILE_ACCESS);
+        }
     }
 }

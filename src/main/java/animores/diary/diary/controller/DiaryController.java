@@ -142,8 +142,6 @@ public class DiaryController {
         return Response.success(null);
     }
 
-    @PreAuthorize("hasAuthority('USER')")
-    @SecurityRequirement(name = "Authorization")
     @UserInfo
     @GetMapping("{diaryId}/comments")
     @Operation(summary = "댓글 목록 조회", description = "일지에 대한 댓글 목록을 조회합니다.")

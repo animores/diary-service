@@ -36,8 +36,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccount() {
-        log.info(accountServiceUrl+ "/api/v1/account");
-
         HttpHeaders headers = new HttpHeaders();
 //        headers.add(ACCOUNT_ID, RequestContextHolder.getRequestAttributes().getAttribute(ACCOUNT_ID, RequestAttributes.SCOPE_REQUEST).toString());
         headers.add(ACCOUNT_ID, DEFAULT_ACCOUNT_ID);

@@ -4,16 +4,13 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
-public class GetAllDiaryCommentDao {
+public class GetAllDiaryReplyDao {
 
-    private Long commentId;
+    private Long replyId;
     private String content;
     private LocalDateTime createdAt;
 
     private Long profileId;
     private String name;
     private String imageUrl;
-
-    private Long replyCount;
-
 }

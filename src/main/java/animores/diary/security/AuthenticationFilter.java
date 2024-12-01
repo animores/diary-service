@@ -29,9 +29,9 @@ import static animores.diary.common.RequestConstants.ACCOUNT_ROLE;
 public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//        String userId = request.getHeader(ACCOUNT_ID) == null ? "anonymous" : request.getHeader("X-User-Id");
-        String userId = "13";
-        String userRole = request.getHeader(ACCOUNT_ROLE) == null ? "anonymous" : request.getHeader("X-User-Role");
+        String userId = request.getHeader(ACCOUNT_ID) == null ? "anonymous" : request.getHeader(ACCOUNT_ID);
+//        String userId = "13";
+        String userRole = request.getHeader(ACCOUNT_ROLE) == null ? "anonymous" : request.getHeader(ACCOUNT_ROLE);
 
         RequestContextHolder.getRequestAttributes().setAttribute(ACCOUNT_ID, userId, RequestAttributes.SCOPE_REQUEST);
         RequestContextHolder.getRequestAttributes().setAttribute(ACCOUNT_ROLE, userRole, RequestAttributes.SCOPE_REQUEST);

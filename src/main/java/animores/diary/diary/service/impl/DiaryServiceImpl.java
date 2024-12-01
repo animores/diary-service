@@ -224,7 +224,7 @@ public class DiaryServiceImpl implements DiaryService {
         authorizationService.validateProfileAccess(account, profile);
 
         List<GetAllDiaryCommentDao> comments = diaryCommentCustomRepository.getAllDiaryComment(
-            profileId, page, size);
+            diaryId, page, size);
         Long totalCount = diaryCommentCustomRepository.getAllDiaryCommentCount(diaryId);
 
         return new GetAllDiaryCommentResponse(totalCount, comments);

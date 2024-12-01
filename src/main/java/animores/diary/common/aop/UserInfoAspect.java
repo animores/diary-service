@@ -15,7 +15,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 @Component
 public class UserInfoAspect {
     private final AccountService accountService;
-    @Pointcut("@annotation(UserInfo)")
+    @Pointcut("@annotation(UserInfo) || @within(UserInfo)")
     public void callAt(){
 
     }
